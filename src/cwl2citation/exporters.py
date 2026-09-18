@@ -50,7 +50,10 @@ def schema(name: str) -> dict[str, Any]:
     return cast(
         "dict[str, Any]",
         json.loads(
-            files("cwl2citation").joinpath("schemas", name).read_text(encoding="utf-8")
+            files("cwl2citation")
+            .joinpath("schemas")
+            .joinpath(name)
+            .read_text(encoding="utf-8")
         ),
     )
 
