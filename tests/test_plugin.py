@@ -1,4 +1,4 @@
-# Copyright 2026 Transpiler-Mate
+# Copyright 2026 Terradue
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,12 +84,7 @@ def test_all_formats_cli(tmp_path: Path) -> None:
     assert ris["doi"] == cff["doi"]
     assert ris["authors"] == ["Author, Example"]
     text = (output / "citation.txt").read_text()
-    assert (
-        "2026" in text
-        and "Hello" in text
-        and "0.1.0" in text
-        and "10.1234/example" in text
-    )
+    assert "2026" in text and "Hello" in text and "0.1.0" in text and "10.1234/example" in text
 
 
 def test_select_formats_with_hyphen(tmp_path: Path) -> None:
@@ -119,9 +114,7 @@ def test_missing_date_and_doi_not_invented(context: Any, tmp_path: Path) -> None
     assert "date-released" not in cff and "doi" not in cff
     assert "issued" not in json.loads((tmp_path / "citation.csl.json").read_text())[0]
     assert "n.d." in (tmp_path / "citation.txt").read_text()
-    assert (
-        "year" not in parse_string((tmp_path / "citation.bib").read_text()).entries[0]
-    )
+    assert "year" not in parse_string((tmp_path / "citation.bib").read_text()).entries[0]
 
 
 @pytest.mark.parametrize("style", ["apa", "ieee", "harvard-cite-them-right"])
@@ -239,8 +232,6 @@ def test_override_metadata_doi(context: Any) -> None:
 def test_default_and_registration() -> None:
     assert CWL2CitationOptions().format == ALL_FORMATS
     assert (
-        next(
-            iter(entry_points(group="transpiler_mate.plugins", name="cwl2citation"))
-        ).load()
+        next(iter(entry_points(group="transpiler_mate.plugins", name="cwl2citation"))).load()
         is cwl2citation
     )

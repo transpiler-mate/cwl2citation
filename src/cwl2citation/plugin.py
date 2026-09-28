@@ -1,4 +1,4 @@
-# Copyright 2026 Transpiler-Mate
+# Copyright 2026 Terradue
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class CWL2CitationOptions(BaseModel):
     model_config = ConfigDict(extra="forbid")
     output: Path = Field(default=Path("citations"), description="Output directory")
     format: list[CitationFormat] = Field(
-        default_factory=lambda: ALL_FORMATS.copy(),
+        default_factory=ALL_FORMATS.copy,
         description="Output format (repeatable; default: all five)",
     )
     style: str = Field(
@@ -51,19 +51,13 @@ class CWL2CitationOptions(BaseModel):
         description="Packaged CSL style name or local .csl file; text only",
     )
     locale: str = Field(default="en-US", description="CSL locale; text only")
-    doi: str | None = Field(
-        default=None, description="Explicit software DOI, overriding metadata"
-    )
+    doi: str | None = Field(default=None, description="Explicit software DOI, overriding metadata")
     released: str | None = Field(
         default=None,
         description="Release/publication date YYYY-MM-DD; never inferred from dateCreated",
     )
-    code_repository: str | None = Field(
-        default=None, description="Source repository HTTP(S) URL"
-    )
-    url: str | None = Field(
-        default=None, description="Software landing-page HTTP(S) URL"
-    )
+    code_repository: str | None = Field(default=None, description="Source repository HTTP(S) URL")
+    url: str | None = Field(default=None, description="Software landing-page HTTP(S) URL")
 
 
 FILENAMES = {
@@ -110,19 +104,24 @@ def cwl2citation(context: TranspilerContext, options: CWL2CitationOptions) -> No
             "text": lambda: exporters.text(record, options.style, options.locale),
         }
         rendered = {FILENAMES[kind]: renderers[kind]() for kind in formats}
-        options.output.mkdir(parents=True, exist_ok=True)
-        written: list[Path] = []
-        try:
-            for name, content in rendered.items():
-                target = options.output / name
-                with target.open("x", encoding="utf-8") as stream:
-                    written.append(target)
-                    stream.write(content)
-        except Exception:
-            for target in written:
-                target.unlink()
-            raise
+        _write_citations(options.output, rendered)
     except PluginError:
         raise
     except Exception as exc:
         raise PluginExecutionError(f"Unable to generate citations: {exc}") from exc
+
+
+def _write_citations(output: Path, rendered: dict[str, str]) -> None:
+    """Write citations exclusively, rolling back files on failure."""
+    output.mkdir(parents=True, exist_ok=True)
+    written: list[Path] = []
+    try:
+        for name, content in rendered.items():
+            target = output / name
+            with target.open("x", encoding="utf-8") as stream:
+                written.append(target)
+                stream.write(content)
+    except Exception:
+        for target in written:
+            target.unlink()
+        raise

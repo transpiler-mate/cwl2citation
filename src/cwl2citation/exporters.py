@@ -1,4 +1,4 @@
-# Copyright 2026 Transpiler-Mate
+# Copyright 2026 Terradue
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,10 +50,7 @@ def schema(name: str) -> dict[str, Any]:
     return cast(
         "dict[str, Any]",
         json.loads(
-            files("cwl2citation")
-            .joinpath("schemas")
-            .joinpath(name)
-            .read_text(encoding="utf-8")
+            files("cwl2citation").joinpath("schemas").joinpath(name).read_text(encoding="utf-8")
         ),
     )
 
@@ -112,24 +109,18 @@ def csl(record: CitationRecord) -> dict[str, Any]:
         "title": record.title,
         "abstract": record.abstract,
         "version": record.version,
-        "author": [
-            {"given": author.given, "family": author.family}
-            for author in record.authors
-        ],
+        "author": [{"given": author.given, "family": author.family} for author in record.authors],
         "publisher": record.publisher,
     }
-    for key, value in {
+    optional = {
         "DOI": record.doi,
         "URL": record.url,
         "keyword": "; ".join(record.keywords) or None,
-    }.items():
-        if value:
-            data[key] = value
+    }
+    data.update({key: value for key, value in optional.items() if value})
     if record.released:
         data["issued"] = {
-            "date-parts": [
-                [record.released.year, record.released.month, record.released.day]
-            ]
+            "date-parts": [[record.released.year, record.released.month, record.released.day]]
         }
     validate([data], "csl-data.json")
     return data
@@ -189,9 +180,7 @@ def ris(record: CitationRecord) -> str:
     if record.url:
         entry["urls"] = [record.url]
     if record.released:
-        entry.update(
-            year=str(record.released.year), date=record.released.strftime("%Y/%m/%d")
-        )
+        entry.update(year=str(record.released.year), date=record.released.strftime("%Y/%m/%d"))
     return str(rispy.dumps([entry], implementation=CitationRisWriter))
 
 

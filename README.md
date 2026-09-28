@@ -1,5 +1,10 @@
 # CWL 2 Citation
 
+[![PyPI - Version](https://img.shields.io/pypi/v/cwl2citation.svg)](https://pypi.org/project/cwl2citation)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cwl2citation.svg)](https://pypi.org/project/cwl2citation)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/transpiler-mate/cwl2citation/package.yaml?branch=develop&event=push&label=build&logo=githubactions)](https://github.com/transpiler-mate/cwl2citation/actions/workflows/package.yaml?query=branch%3Adevelop)
+[![Code coverage](https://img.shields.io/codecov/c/github/transpiler-mate/cwl2citation/develop?logo=codecov)](https://app.codecov.io/gh/transpiler-mate/cwl2citation/tree/develop)
+
 Generate a citation experience for CWL software with a Transpiler-Mate plugin: **CFF, BibTeX, RIS, CSL-JSON, and styled text** from the same metadata.
 
 Bootstrapped from [transpiler-mate-plugin-project-template](https://github.com/transpiler-mate/transpiler-mate-plugin-project-template).
@@ -54,4 +59,7 @@ pip install -r requirements-docs.txt
 mkdocs build --strict
 ```
 
-Apache-2.0 for project code; bundled schemas retain their upstream licenses.
+
+## License
+
+[![Apache License, Version 2.0](https://img.shields.io/badge/license-Apache%20License%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0) for project code; bundled schemas retain their upstream licenses.
