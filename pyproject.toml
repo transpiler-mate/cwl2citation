@@ -54,7 +54,7 @@ dependencies = [
   "pylatexenc>=2.10,<3",
   "jsonschema>=4.23,<5",
   "ruamel.yaml>=0.18,<0.20",
-  "pydantic>=2,<3"
+  "pydantic>=2.13.5,<3"
 ]
 
 [project.optional-dependencies]
